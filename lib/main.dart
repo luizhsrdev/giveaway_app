@@ -23,7 +23,12 @@ class SorteioScreen extends StatefulWidget {
 
 class _SorteioScreenState extends State<SorteioScreen> {
   List<String> participantes = [
-    'Luiz Henrique, João Veras, Sean Victor, Guilherme Ancheschi, Heitor Macedo',
+    'Luiz Henrique',
+    'João Veras',
+    'Sean Victor',
+    'Guilherme Ancheschi',
+    'Heitor Macedo',
+    'Mateus Pessoa',
   ];
   List<String> vencedores = [];
   String vencedorAtual = '';
@@ -47,7 +52,12 @@ class _SorteioScreenState extends State<SorteioScreen> {
   void reiniciarSorteio() {
     setState(() {
       participantes = [
-        'Luiz Henrique, João Veras, Sean Victor, Guilherme Ancheschi, Heitor Macedo',
+        'Luiz Henrique',
+        'João Veras',
+        'Sean Victor',
+        'Guilherme Ancheschi',
+        'Heitor Macedo',
+        'Mateus Pessoa',
       ];
       vencedores.clear();
       vencedorAtual = '';
@@ -73,9 +83,7 @@ class _SorteioScreenState extends State<SorteioScreen> {
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: reiniciarSorteio,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red, // Cor do botão
-              ),
+              style: ElevatedButton.styleFrom(),
               child: Text('Reiniciar Sorteio'),
             ),
             SizedBox(height: 20),
