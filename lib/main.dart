@@ -1,76 +1,92 @@
-import 'dart:math'; // Importa a biblioteca para gerar números aleatórios
-import 'package:flutter/material.dart'; // Importa o Flutter Material Design
+import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
-  runApp(SorteioApp()); // Inicia o aplicativo Flutter
+  runApp(MyApp());
 }
 
-class SorteioApp extends StatelessWidget {
-  const SorteioApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SorteioHome(), // Define a tela inicial do aplicativo
-      debugShowCheckedModeBanner: false, // Remove o banner de debug
-    );
+    return MaterialApp(home: SorteioScreen());
   }
 }
 
-class SorteioHome extends StatefulWidget {
-  const SorteioHome({super.key});
+class SorteioScreen extends StatefulWidget {
+  const SorteioScreen({super.key});
 
   @override
-  _SorteioHomeState createState() => _SorteioHomeState(); // Cria o estado da tela
+  _SorteioScreenState createState() => _SorteioScreenState();
 }
 
-class _SorteioHomeState extends State<SorteioHome> {
-  var lista = [
-    "Mateus Pessoa",
-    "Luiz Henrique",
-    "Sean Victor",
-    "Guiguibo",
-  ]; // Lista de pessoas para o sorteio
-  String itemSorteado =
-      'Clique para sortear alguém!'; // Mensagem inicial exibida na tela
+class _SorteioScreenState extends State<SorteioScreen> {
+  List<String> participantes = [
+    'Luiz Henrique, João Veras, Sean Victor, Guilherme Ancheschi, Heitor Macedo',
+  ];
+  List<String> vencedores = [];
+  String vencedorAtual = '';
 
-  void sortearPessoa() {
-    var random = Random(); // Cria uma instância para gerar números aleatórios
-    var indiceSorteado = random.nextInt(
-      lista.length,
-    ); // Gera um índice aleatório com base no tamanho da lista
-    var pessoaSorteada =
-        lista[indiceSorteado]; // Obtém a pessoa sorteada com base no índice gerado
+  void sortearVencedor() {
+    if (participantes.isNotEmpty) {
+      final random = Random();
+      int index = random.nextInt(participantes.length);
+      setState(() {
+        vencedorAtual = participantes[index];
+        vencedores.add(vencedorAtual);
+        participantes.removeAt(index);
+      });
+    } else {
+      setState(() {
+        vencedorAtual = 'Todos já venceram!';
+      });
+    }
+  }
 
+  void reiniciarSorteio() {
     setState(() {
-      itemSorteado =
-          "A pessoa sorteada foi: $pessoaSorteada"; // Atualiza o texto exibido na tela
+      participantes = [
+        'Luiz Henrique, João Veras, Sean Victor, Guilherme Ancheschi, Heitor Macedo',
+      ];
+      vencedores.clear();
+      vencedorAtual = '';
     });
-
-    print(itemSorteado); // Exibe o resultado no console (opcional)
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sorteador de Pessoas'), // Título da AppBar
-      ),
-      body: Center(
+      appBar: AppBar(title: Text('Sorteio')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Centraliza os elementos verticalmente
           children: [
             Text(
-              itemSorteado, // Exibe o texto atual (inicial ou o resultado do sorteio)
-              style: TextStyle(fontSize: 24), // Define o tamanho da fonte
-              textAlign: TextAlign.center, // Centraliza o texto horizontalmente
+              vencedorAtual.isEmpty
+                  ? 'Clique em "Sortear" para escolher um vencedor!'
+                  : 'Vencedor: $vencedorAtual',
+              style: TextStyle(fontSize: 20),
             ),
-            SizedBox(height: 30), // Espaçamento entre o texto e o botão
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: sortearVencedor, child: Text('Sortear')),
+            SizedBox(height: 10),
             ElevatedButton(
-              onPressed:
-                  sortearPessoa, // Define a função chamada ao pressionar o botão
-              child: Text('Sortear!'), // Texto do botão
+              onPressed: reiniciarSorteio,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, // Cor do botão
+              ),
+              child: Text('Reiniciar Sorteio'),
+            ),
+            SizedBox(height: 20),
+            Text('Histórico de Vencedores:', style: TextStyle(fontSize: 18)),
+            Expanded(
+              child: ListView.builder(
+                itemCount: vencedores.length,
+                itemBuilder: (context, index) {
+                  return ListTile(title: Text(vencedores[index]));
+                },
+              ),
             ),
           ],
         ),
